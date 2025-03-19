@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - IOE Health Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Register - IOE Health Manager</h1>
+    </header>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">{{ messages[0] }}</div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label>Username:</label><input type="text" name="username" required><br>
+            <label>Password:</label><input type="password" name="password" required><br>
+            <label>Role:</label>
+            <select name="role" required>
+                <option value="student">Student</option>
+                <option value="admin">Admin</option>
+            </select><br>
+            <label>Student ID (if student):</label><input type="text" name="student_id" placeholder="e.g., PUR077BCT001"><br>
+            <input type="submit" value="Register">
+        </form>
+        <button onclick="window.location.href='/'">Back to Home</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - IOE Health Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="dashboard">
+    <header>
+        <h1>Admin Health Records Dashboard</h1>
+    </header>
+    <div class="container">
+        <form method="POST">
+            <input type="text" name="search" placeholder="Search by name or ID">
+            <button type="submit">Search</button>
+        </form>
+        <button onclick="window.location.href='/logout'">Logout</button>
+        <button onclick="window.location.href='/'">Back to Home</button>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">{{ messages[0] }}</div>
+            {% endif %}
+        {% endwith %}
+        <table>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Blood Type</th>
+                <th>Emergency Contact</th>
+                <th>Medical Conditions</th>
+                <th>Actions</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                <td>{{ record[1] }}</td>
+                <td>{{ record[2] }}</td>
+                <td>{{ record[3] }}</td>
+                <td>{{ record[4] }}</td>
+                <td>{{ record[5] }}</td>
+                <td>
+                    <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

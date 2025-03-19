@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Profile - IOE Health Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="profile">
+    <header>
+        <h1>My Health Profile - IOE Purwanchal Campus</h1>
+    </header>
+    <div class="container">
+        <button onclick="window.location.href='/logout'">Logout</button>
+        <button onclick="window.location.href='/'">Back to Home</button>
+        <div id="flash-messages">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div id="record-content">
+            {% if record %}
+                <div class="profile-info">
+                    <h2>{{ record[2] }} ({{ record[1] }})</h2>
+                    <p><strong>Blood Type:</strong> {{ record[3] }}</p>
+                    <p><strong>Emergency Contact:</strong> {{ record[4] }}</p>
+                    <p><strong>Medical Conditions:</strong> {{ record[5] or 'None' }}</p>
+                    <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit Details</button>
+                    <button onclick="deleteRecord('{{ record[0] }}')">Delete Record</button>
+                </div>
+            {% else %}
+                <div class="no-record">
+                    <p>No health record found.</p>
+                    <button onclick="window.location.href='/add'">Add New Record</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function deleteRecord(recordId) {
+            if (!confirm('Are you sure you want to delete your health record?')) {
+                return;
+            }
+
+            fetch(`/delete/${recordId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show flash message
+                const flashMessages = document.getElementById('flash-messages');
+                flashMessages.innerHTML = `<div class="flash">${data.message}</div>`;
+
+                if (data.success) {
+                    // Update the DOM to show "no record" state
+                    const recordContent = document.getElementById('record-content');
+                    recordContent.innerHTML = `
+                        <div class="no-record">
+                            <p>No health record found.</p>
+                            <button onclick="window.location.href='/add'">Add New Record</button>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const flashMessages = document.getElementById('flash-messages');
+                flashMessages.innerHTML = `<div class="flash">Error deleting record. Please try again.</div>`;
+            });
+        }
+    </script>
+</body>
+</html>

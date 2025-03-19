@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Student Health Record</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Edit Student Health Record - IOE Purwanchal Campus</h1>
+    </header>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">{{ messages[0] }}</div>
+            {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label>Student ID:</label><input type="text" name="student_id" value="{{ record[1] }}" required><br>
+            <label>Name:</label><input type="text" name="name" value="{{ record[2] }}" required><br>
+            <label>Blood Type:</label>
+            <select name="blood_type" required>
+                <option value="A+" {% if record[3] == 'A+' %}selected{% endif %}>A+</option>
+                <option value="A-" {% if record[3] == 'A-' %}selected{% endif %}>A-</option>
+                <option value="B+" {% if record[3] == 'B+' %}selected{% endif %}>B+</option>
+                <option value="B-" {% if record[3] == 'B-' %}selected{% endif %}>B-</option>
+                <option value="AB+" {% if record[3] == 'AB+' %}selected{% endif %}>AB+</option>
+                <option value="AB-" {% if record[3] == 'AB-' %}selected{% endif %}>AB-</option>
+                <option value="O+" {% if record[3] == 'O+' %}selected{% endif %}>O+</option>
+                <option value="O-" {% if record[3] == 'O-' %}selected{% endif %}>O-</option>
+            </select><br>
+            <label>Emergency Contact:</label><input type="text" name="emergency_contact" value="{{ record[4] }}" required><br>
+            <label>Medical Conditions:</label><textarea name="medical_conditions">{{ record[5] }}</textarea><br>
+            <input type="submit" value="Update">
+        </form>
+        <button onclick="window.location.href='/dashboard'">Back</button>
+    </div>
+</body>
+</html>

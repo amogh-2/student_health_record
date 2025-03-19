@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IOE Purwanchal Campus - Health Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body id="index">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Welcome to IOE Purwanchal Campus Health Manager</h1>
+            <p>Securely manage vital health details for students and staff.</p>
+            <div class="hero-buttons">
+                {% if logged_in %}
+                    <button onclick="window.location.href='/dashboard'">Go to Dashboard</button>
+                    <button onclick="window.location.href='/logout'">Logout</button>
+                {% else %}
+                    <button onclick="window.location.href='/login'">Login</button>
+                    <button onclick="window.location.href='/register'">Register</button>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</body>
+</html>
