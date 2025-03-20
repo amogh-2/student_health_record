@@ -3,23 +3,35 @@
 <head>
     <title>Login - IOE Health Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Login - IOE Health Manager</h1>
+        <div class="header-content">
+            <h1>IOE Health Manager</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/register">Register</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="flash">{{ messages[0] }}</div>
-            {% endif %}
-        {% endwith %}
-        <form method="POST">
-            <label>Username:</label><input type="text" name="username" required><br>
-            <label>Password:</label><input type="password" name="password" required><br>
-            <input type="submit" value="Login">
-        </form>
-        <button onclick="window.location.href='/'">Back to Home</button>
-    </div>
+    <main class="form-page">
+        <div class="form-container">
+            <h2>Login</h2>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+            <form method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <input type="submit" value="Login">
+            </form>
+            <p>Don't have an account? <a href="/register">Register here</a>.</p>
+        </div>
+    </main>
 </body>
 </html>

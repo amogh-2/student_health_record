@@ -3,74 +3,87 @@
 <head>
     <title>Admin Dashboard - IOE Health Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body id="dashboard">
     <header>
-        <h1>Admin Health Records Dashboard</h1>
+        <div class="header-content">
+            <h1>IOE Health Manager</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        <div class="dashboard-header">
-            <button onclick="window.location.href='/logout'">Logout</button>
-            <button onclick="window.location.href='/'">Back to Home</button>
-        </div>
-        <div id="flash-messages">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="flash">{{ messages[0] }}</div>
+    <main class="dashboard-page">
+        <div class="container">
+            <!-- Pending Admins Section (Positioned in Right Corner) -->
+            <div class="pending-admins">
+                <h2>Pending Admin Approvals</h2>
+                {% if pending_admins %}
+                    <table id="pending-admins-table">
+                        <tr>
+                            <th>Username</th>
+                            <th>Actions</th>
+                        </tr>
+                        {% for admin in pending_admins %}
+                        <tr>
+                            <td>{{ admin[1] }}</td>
+                            <td>
+                                <button onclick="manageAdmin('{{ admin[0] }}', 'approve')">Approve</button>
+                                <button onclick="manageAdmin('{{ admin[0] }}', 'reject')">Reject</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No pending admin approvals.</p>
                 {% endif %}
-            {% endwith %}
-        </div>
+            </div>
 
-        <!-- Pending Admin Approvals (Notification-Style in Top-Right Corner) -->
-        <div class="pending-admins-notification">
-            <h3>Pending Admin Approvals</h3>
-            {% if pending_admins %}
-                <ul>
-                    {% for admin in pending_admins %}
-                    <li>
-                        <span>{{ admin[1] }}</span>
-                        <button class="approve-btn" onclick="manageAdmin('{{ admin[0] }}', 'approve')">✔</button>
-                        <button class="reject-btn" onclick="manageAdmin('{{ admin[0] }}', 'reject')">✖</button>
-                    </li>
+            <!-- Main Dashboard Content -->
+            <h2>Admin Dashboard</h2>
+            <div id="flash-messages">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash">{{ messages[0] }}</div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Student Health Records Section (Full Width) -->
+            <div class="health-records">
+                <h3>Student Health Records</h3>
+                <form method="POST">
+                    <input type="text" name="search" placeholder="Search by name or ID">
+                    <button type="submit">Search</button>
+                </form>
+                <table>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Blood Type</th>
+                        <th>Emergency Contact</th>
+                        <th>Medical Conditions</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record[1] }}</td>
+                        <td>{{ record[2] }}</td>
+                        <td>{{ record[3] }}</td>
+                        <td>{{ record[4] }}</td>
+                        <td>{{ record[5] }}</td>
+                        <td>
+                            <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit</button>
+                            <button onclick="if(confirm('Are you sure?')) window.location.href='/delete/{{ record[0] }}'">Delete</button>
+                        </td>
+                    </tr>
                     {% endfor %}
-                </ul>
-            {% else %}
-                <p>No pending approvals.</p>
-            {% endif %}
+                </table>
+            </div>
         </div>
-
-        <!-- Student Health Records Section (Full Width) -->
-        <div class="health-records">
-            <h2>Student Health Records</h2>
-            <form method="POST">
-                <input type="text" name="search" placeholder="Search by name or ID">
-                <button type="submit">Search</button>
-            </form>
-            <table>
-                <tr>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Blood Type</th>
-                    <th>Emergency Contact</th>
-                    <th>Medical Conditions</th>
-                    <th>Actions</th>
-                </tr>
-                {% for record in records %}
-                <tr>
-                    <td>{{ record[1] }}</td>
-                    <td>{{ record[2] }}</td>
-                    <td>{{ record[3] }}</td>
-                    <td>{{ record[4] }}</td>
-                    <td>{{ record[5] }}</td>
-                    <td>
-                        <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit</button>
-                        <button onclick="if(confirm('Are you sure?')) window.location.href='/delete/{{ record[0] }}'">Delete</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
+    </main>
 
     <script>
         function manageAdmin(userId, action) {
@@ -91,14 +104,14 @@
                 flashMessages.innerHTML = `<div class="flash">${data.message}</div>`;
 
                 if (data.success) {
-                    // Remove the list item
-                    const li = document.querySelector(`.pending-admins-notification ul li:has(button[onclick*="${userId}"])`);
-                    if (li) li.remove();
+                    // Remove the row from the table
+                    const row = document.querySelector(`#pending-admins-table tr:has(td:contains('${userId}'))`);
+                    if (row) row.remove();
 
-                    // If no items left, show "No pending approvals"
-                    const ul = document.querySelector('.pending-admins-notification ul');
-                    if (ul && ul.children.length === 0) {
-                        ul.outerHTML = '<p>No pending approvals.</p>';
+                    // If no rows left, show "No pending admin approvals"
+                    const table = document.getElementById('pending-admins-table');
+                    if (table && table.rows.length === 1) {  // Only header row remains
+                        table.outerHTML = '<p>No pending admin approvals.</p>';
                     }
                 }
             })
@@ -110,4 +123,4 @@
         }
     </script>
 </body>
-</html^
+</html>

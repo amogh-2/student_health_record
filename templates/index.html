@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IOE Purwanchal Campus - Health Manager</title>
+    <title>IOE Health Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body id="index">
-    <!-- Hero Section -->
-    <section class="hero">
+<body>
+    <header>
+        <div class="header-content">
+            <h1>IOE Health Manager</h1>
+            <nav>
+                {% if logged_in %}
+                    {% if current_user.role == 'student' %}
+                        <a href="/profile">My Profile</a>
+                    {% else %}
+                        <a href="/dashboard">Admin Dashboard</a>
+                    {% endif %}
+                    <a href="/logout">Logout</a>
+                {% else %}
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Welcome to IOE Purwanchal Campus Health Manager</h1>
-            <p>Securely manage vital health details for students and staff.</p>
-            <div class="hero-buttons">
-                {% if logged_in %}
-                    <button onclick="window.location.href='/dashboard'">Go to Dashboard</button>
-                    <button onclick="window.location.href='/logout'">Logout</button>
-                {% else %}
-                    <button onclick="window.location.href='/login'">Login</button>
-                    <button onclick="window.location.href='/register'">Register</button>
-                {% endif %}
-            </div>
+            <h1>Welcome to IOE Health Manager</h1>
+            <p>Manage student health records efficiently and securely.</p>
         </div>
-    </section>
+    </main>
 </body>
 </html>

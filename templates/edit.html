@@ -1,38 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Student Health Record</title>
+    <title>Edit Health Record - IOE Health Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>Edit Student Health Record - IOE Purwanchal Campus</h1>
+        <div class="header-content">
+            <h1>IOE Health Manager</h1>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="flash">{{ messages[0] }}</div>
-            {% endif %}
-        {% endwith %}
-        <form method="POST">
-            <label>Student ID:</label><input type="text" name="student_id" value="{{ record[1] }}" required><br>
-            <label>Name:</label><input type="text" name="name" value="{{ record[2] }}" required><br>
-            <label>Blood Type:</label>
-            <select name="blood_type" required>
-                <option value="A+" {% if record[3] == 'A+' %}selected{% endif %}>A+</option>
-                <option value="A-" {% if record[3] == 'A-' %}selected{% endif %}>A-</option>
-                <option value="B+" {% if record[3] == 'B+' %}selected{% endif %}>B+</option>
-                <option value="B-" {% if record[3] == 'B-' %}selected{% endif %}>B-</option>
-                <option value="AB+" {% if record[3] == 'AB+' %}selected{% endif %}>AB+</option>
-                <option value="AB-" {% if record[3] == 'AB-' %}selected{% endif %}>AB-</option>
-                <option value="O+" {% if record[3] == 'O+' %}selected{% endif %}>O+</option>
-                <option value="O-" {% if record[3] == 'O-' %}selected{% endif %}>O-</option>
-            </select><br>
-            <label>Emergency Contact:</label><input type="text" name="emergency_contact" value="{{ record[4] }}" required><br>
-            <label>Medical Conditions:</label><textarea name="medical_conditions">{{ record[5] }}</textarea><br>
-            <input type="submit" value="Update">
-        </form>
-        <button onclick="window.location.href='/dashboard'">Back</button>
-    </div>
+    <main class="form-page">
+        <div class="form-container">
+            <h2>Edit Health Record</h2>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+            <form method="POST">
+                <label for="student_id">Student ID:</label>
+                <input type="text" id="student_id" name="student_id" value="{{ record[1] }}" required>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ record[2] }}" required>
+                <label for="blood_type">Blood Type:</label>
+                <input type="text" id="blood_type" name="blood_type" value="{{ record[3] }}" required>
+                <label for="emergency_contact">Emergency Contact:</label>
+                <input type="text" id="emergency_contact" name="emergency_contact" value="{{ record[4] }}" required>
+                <label for="medical_conditions">Medical Conditions (optional):</label>
+                <textarea id="medical_conditions" name="medical_conditions">{{ record[5] }}</textarea>
+                <input type="submit" value="Update">
+            </form>
+            <button onclick="window.location.href='/dashboard'">Back to Dashboard</button>
+        </div>
+    </main>
 </body>
 </html>

@@ -3,39 +3,49 @@
 <head>
     <title>My Profile - IOE Health Manager</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body id="profile">
     <header>
-        <h1>My Health Profile - IOE Purwanchal Campus</h1>
+        <div class="header-content">
+            <h1>IOE Health Manager</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
     </header>
-    <div class="container">
-        <button onclick="window.location.href='/logout'">Logout</button>
-        <button onclick="window.location.href='/'">Back to Home</button>
-        <div id="flash-messages">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <div class="flash">{{ messages[0] }}</div>
+    <main class="profile-page">
+        <div class="container">
+            <h2>My Health Profile</h2>
+            <div id="flash-messages">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash">{{ messages[0] }}</div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div id="record-content">
+                {% if record %}
+                    <div class="profile-info">
+                        <h3>{{ record[2] }} ({{ record[1] }})</h3>
+                        <p><strong>Blood Type:</strong> {{ record[3] }}</p>
+                        <p><strong>Emergency Contact:</strong> {{ record[4] }}</p>
+                        <p><strong>Medical Conditions:</strong> {{ record[5] or 'None' }}</p>
+                        <div class="profile-actions">
+                            <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit Details</button>
+                            <button onclick="deleteRecord('{{ record[0] }}')">Delete Record</button>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="no-record">
+                        <p>No health record found.</p>
+                        <button onclick="window.location.href='/add'">Add New Record</button>
+                    </div>
                 {% endif %}
-            {% endwith %}
+            </div>
         </div>
-        <div id="record-content">
-            {% if record %}
-                <div class="profile-info">
-                    <h2>{{ record[2] }} ({{ record[1] }})</h2>
-                    <p><strong>Blood Type:</strong> {{ record[3] }}</p>
-                    <p><strong>Emergency Contact:</strong> {{ record[4] }}</p>
-                    <p><strong>Medical Conditions:</strong> {{ record[5] or 'None' }}</p>
-                    <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit Details</button>
-                    <button onclick="deleteRecord('{{ record[0] }}')">Delete Record</button>
-                </div>
-            {% else %}
-                <div class="no-record">
-                    <p>No health record found.</p>
-                    <button onclick="window.location.href='/add'">Add New Record</button>
-                </div>
-            {% endif %}
-        </div>
-    </div>
+    </main>
 
     <script>
         function deleteRecord(recordId) {
@@ -51,12 +61,10 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Show flash message
                 const flashMessages = document.getElementById('flash-messages');
                 flashMessages.innerHTML = `<div class="flash">${data.message}</div>`;
 
                 if (data.success) {
-                    // Update the DOM to show "no record" state
                     const recordContent = document.getElementById('record-content');
                     recordContent.innerHTML = `
                         <div class="no-record">
