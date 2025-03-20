@@ -351,7 +351,7 @@ tr:hover {
 /* Hero Section (Index Page) */
 .hero {
     position: relative;
-    height: 70vh;
+    height: 100vh; /* Full viewport height to eliminate gap */
     background-image: url('/static/hero-bg.jpg');
     background-size: cover;
     background-position: center;
@@ -425,7 +425,7 @@ tr:hover {
     }
 
     .hero {
-        height: 60vh;
+        height: 100vh; /* Ensure full height on smaller screens */
     }
 
     .hero-content h1 {
