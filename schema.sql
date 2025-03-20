@@ -16,21 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `departments`
---
-
-DROP TABLE IF EXISTS `departments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `departments` (
-  `dept_id` int NOT NULL AUTO_INCREMENT,
-  `dept_name` varchar(50) NOT NULL,
-  PRIMARY KEY (`dept_id`),
-  UNIQUE KEY `dept_name` (`dept_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `student_health`
 --
 
@@ -66,24 +51,6 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `emergency_contact`,
  1 AS `medical_conditions`*/;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `students`
---
-
-DROP TABLE IF EXISTS `students`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `students` (
-  `student_id` varchar(20) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `dept_id` int DEFAULT NULL,
-  `enrollment_date` date DEFAULT NULL,
-  PRIMARY KEY (`student_id`),
-  KEY `dept_id` (`dept_id`),
-  CONSTRAINT `students_ibfk_1` FOREIGN KEY (`dept_id`) REFERENCES `departments` (`dept_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `users`
@@ -132,4 +99,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-20 19:33:05
+-- Dump completed on 2025-03-20 19:46:36

@@ -4,5 +4,4 @@ pycache/
 .env
 *.sql
 !schema.sql
-!seed.sql
 dbmsvenv/
