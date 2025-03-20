@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import mysql.connector
 from config import MYSQL_CONFIG
+import bcrypt  # Added bcrypt for password hashing
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'
+app.secret_key = 'your-secret-key-here'  # Should be a strong, random secret key in production
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -39,13 +40,13 @@ def get_db_connection():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = request.form['password'].encode('utf-8')  # Encode to bytes for bcrypt
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('SELECT id, username, password, role, student_id, status FROM users WHERE username = %s', (username,))
         user = cursor.fetchone()
         conn.close()
-        if user and password == user[2]:  # Compare plain text passwords
+        if user and bcrypt.checkpw(password, user[2].encode('utf-8')):  # Check hashed password
             user_obj = User(user[0], user[1], user[3], user[4], user[5])
             if user_obj.status == 'pending':
                 flash('Your admin account is awaiting approval. Please wait for an admin to approve your account.')
@@ -64,7 +65,8 @@ def login():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']  # Store as plain text
+        password = request.form['password'].encode('utf-8')  # Encode to bytes
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())  # Hash the password
         role = request.form['role']
         student_id = request.form.get('student_id')
 
@@ -80,7 +82,7 @@ def register():
         cursor = conn.cursor()
         try:
             cursor.execute('INSERT INTO users (username, password, role, student_id, status) VALUES (%s, %s, %s, %s, %s)',
-                           (username, password, role, student_id, status))
+                           (username, hashed_password.decode('utf-8'), role, student_id, status))  # Store as string
             conn.commit()
         except mysql.connector.Error as err:
             conn.close()
@@ -100,6 +102,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+# Rest of your routes remain unchanged
 @app.route('/')
 def index():
     return render_template('index.html', logged_in=current_user.is_authenticated)
