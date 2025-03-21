@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Profile - IOE Health Manager</title>
+    <title>My Profile - ERC Meditrack</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body id="profile">
     <header>
         <div class="header-content">
-            <h1>IOE Health Manager</h1>
+            <h1>ERC Meditrack</h1>
             <nav>
                 <a href="/">Home</a>
                 <a href="/logout">Logout</a>
@@ -17,7 +17,7 @@
     </header>
     <main class="profile-page">
         <div class="container">
-            <h2>My Health Profile</h2>
+            <h2>My Profile</h2>
             <div id="flash-messages">
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -29,18 +29,31 @@
                 {% if record %}
                     <div class="profile-info">
                         <h3>{{ record[2] }} ({{ record[1] }})</h3>
+                        <p><strong>Username:</strong> {{ user.username }}</p>
+                        <p><strong>Student ID:</strong> {{ record[1] }}</p>
+                        <p><strong>Address:</strong> {{ record[6] or 'Not set' }}</p>
+                        <p><strong>Guardian Name:</strong> {{ record[7] or 'Not set' }}</p>
+                        <p><strong>Guardian Contact:</strong> {{ record[8] or 'Not set' }}</p>
                         <p><strong>Blood Type:</strong> {{ record[3] }}</p>
                         <p><strong>Emergency Contact:</strong> {{ record[4] }}</p>
                         <p><strong>Medical Conditions:</strong> {{ record[5] or 'None' }}</p>
                         <div class="profile-actions">
-                            <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit Details</button>
-                            <button onclick="deleteRecord('{{ record[0] }}')">Delete Record</button>
+                            <button onclick="window.location.href='/manage_profile'">Edit Profile</button>
+                            <button onclick="deleteRecord('{{ record[0] }}')">Delete Health Record</button>
+
                         </div>
                     </div>
                 {% else %}
                     <div class="no-record">
                         <p>No health record found.</p>
-                        <button onclick="window.location.href='/add'">Add New Record</button>
+                        <p><strong>Username:</strong> {{ user.username }}</p>
+                        <p><strong>Student ID:</strong> {{ user.student_id }}</p>
+                        <p><strong>Address:</strong> {{ user.address or 'Not set' }}</p>
+                        <p><strong>Guardian Name:</strong> {{ user.guardian_name or 'Not set' }}</p>
+                        <p><strong>Guardian Contact:</strong> {{ user.guardian_contact or 'Not set' }}</p>
+                        <div class="profile-actions">
+                            <button onclick="window.location.href='/manage_profile'">Add Profile Info</button>
+                        </div>
                     </div>
                 {% endif %}
             </div>
@@ -65,13 +78,7 @@
                 flashMessages.innerHTML = `<div class="flash">${data.message}</div>`;
 
                 if (data.success) {
-                    const recordContent = document.getElementById('record-content');
-                    recordContent.innerHTML = `
-                        <div class="no-record">
-                            <p>No health record found.</p>
-                            <button onclick="window.location.href='/add'">Add New Record</button>
-                        </div>
-                    `;
+                    window.location.reload();
                 }
             })
             .catch(error => {

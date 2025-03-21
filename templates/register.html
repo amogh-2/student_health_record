@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Register - IOE Health Manager</title>
+    <title>Register - ERC Meditrack</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="header-content">
-            <h1>IOE Health Manager</h1>
+            <h1>ERC Meditrack</h1>
             <nav>
                 <a href="/">Home</a>
                 <a href="/login">Login</a>
@@ -28,7 +28,6 @@
                 <input type="text" id="username" name="username" required>
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
-                
                 <label for="role">Role:</label>
                 <select name="role" id="role" required onchange="toggleStudentId()">
                     <option value="student">Student</option>

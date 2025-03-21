@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Health Record - ERC Meditrack</title>
+    <title>Update Details - ERC Meditrack</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -17,22 +17,20 @@
     </header>
     <main class="form-page">
         <div class="form-container">
-            <h2>Add/Update Health Record</h2>
+            <h2>Update Personal Details</h2>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <div class="flash">{{ messages[0] }}</div>
                 {% endif %}
             {% endwith %}
             <form method="POST">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="blood_type">Blood Type:</label>
-                <input type="text" id="blood_type" name="blood_type" required>
-                <label for="emergency_contact">Emergency Contact:</label>
-                <input type="text" id="emergency_contact" name="emergency_contact" required>
-                <label for="medical_conditions">Medical Conditions (optional):</label>
-                <textarea id="medical_conditions" name="medical_conditions"></textarea>
-                <input type="submit" value="Submit">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" value="{{ current_user.address or '' }}" required>
+                <label for="guardian_name">Guardian Name:</label>
+                <input type="text" id="guardian_name" name="guardian_name" value="{{ current_user.guardian_name or '' }}" required>
+                <label for="guardian_contact">Guardian Contact:</label>
+                <input type="text" id="guardian_contact" name="guardian_contact" value="{{ current_user.guardian_contact or '' }}" required>
+                <input type="submit" value="Update Details">
             </form>
             <button onclick="window.location.href='/profile'">Back to Profile</button>
         </div>

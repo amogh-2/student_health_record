@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard - IOE Health Manager</title>
+    <title>Admin Dashboard - ERC Meditrack</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body id="dashboard">
     <header>
         <div class="header-content">
-            <h1>IOE Health Manager</h1>
+            <h1>ERC Meditrack</h1>
             <nav>
                 <a href="/">Home</a>
                 <a href="/logout">Logout</a>
@@ -62,6 +62,9 @@
                     <tr>
                         <th>Student ID</th>
                         <th>Name</th>
+                        <th>Address</th>
+                        <th>Guardian Name</th>
+                        <th>Guardian Contact</th>
                         <th>Blood Type</th>
                         <th>Emergency Contact</th>
                         <th>Medical Conditions</th>
@@ -71,9 +74,12 @@
                     <tr>
                         <td>{{ record[1] }}</td>
                         <td>{{ record[2] }}</td>
+                        <td>{{ record[6] or 'Not set' }}</td>
+                        <td>{{ record[7] or 'Not set' }}</td>
+                        <td>{{ record[8] or 'Not set' }}</td>
                         <td>{{ record[3] }}</td>
                         <td>{{ record[4] }}</td>
-                        <td>{{ record[5] }}</td>
+                        <td>{{ record[5] or 'None' }}</td>
                         <td>
                             <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit</button>
                             <button onclick="if(confirm('Are you sure?')) window.location.href='/delete/{{ record[0] }}'">Delete</button>
@@ -104,13 +110,11 @@
                 flashMessages.innerHTML = `<div class="flash">${data.message}</div>`;
 
                 if (data.success) {
-                    // Remove the row from the table
                     const row = document.querySelector(`#pending-admins-table tr:has(td:contains('${userId}'))`);
                     if (row) row.remove();
 
-                    // If no rows left, show "No pending admin approvals"
                     const table = document.getElementById('pending-admins-table');
-                    if (table && table.rows.length === 1) {  // Only header row remains
+                    if (table && table.rows.length === 1) {
                         table.outerHTML = '<p>No pending admin approvals.</p>';
                     }
                 }
