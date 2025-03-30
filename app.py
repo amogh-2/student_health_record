@@ -139,8 +139,9 @@ def dashboard():
     cursor = conn.cursor()
 
     query = request.form.get('search', '') if request.method == 'POST' else ''
+    # Removed sh.id from SELECT since it doesn't exist in student_health table
     sql = '''
-        SELECT sh.id, sh.student_id, sh.name, sh.blood_type, sh.emergency_contact, sh.medical_conditions,
+        SELECT sh.student_id, sh.name, sh.blood_type, sh.emergency_contact, sh.medical_conditions,
                ud.address, ud.guardian_name, ud.guardian_contact
         FROM student_health sh
         LEFT JOIN user_details ud ON sh.student_id = (SELECT student_id FROM users WHERE id = ud.user_id)
@@ -186,8 +187,9 @@ def profile():
         return redirect(url_for('dashboard' if current_user.role == 'admin' else 'index'))
     conn = get_db_connection()
     cursor = conn.cursor()
+    # Removed sh.id from SELECT since it doesn't exist in student_health table
     cursor.execute('''
-        SELECT sh.id, sh.student_id, sh.name, sh.blood_type, sh.emergency_contact, sh.medical_conditions,
+        SELECT sh.student_id, sh.name, sh.blood_type, sh.emergency_contact, sh.medical_conditions,
                ud.address, ud.guardian_name, ud.guardian_contact
         FROM student_health sh
         LEFT JOIN user_details ud ON sh.student_id = (SELECT student_id FROM users WHERE id = ud.user_id)
@@ -206,8 +208,9 @@ def manage_profile():
     
     conn = get_db_connection()
     cursor = conn.cursor()
+    # Removed sh.id from SELECT since it doesn't exist in student_health table
     cursor.execute('''
-        SELECT sh.id, sh.student_id, sh.name, sh.blood_type, sh.emergency_contact, sh.medical_conditions,
+        SELECT sh.student_id, sh.name, sh.blood_type, sh.emergency_contact, sh.medical_conditions,
                ud.address, ud.guardian_name, ud.guardian_contact
         FROM student_health sh
         LEFT JOIN user_details ud ON sh.student_id = (SELECT student_id FROM users WHERE id = ud.user_id)
@@ -265,18 +268,19 @@ def manage_profile():
     conn.close()
     return render_template('manage_profile.html', record=record, user=current_user)
 
-@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+@app.route('/edit/<student_id>', methods=['GET', 'POST'])
 @login_required
-def edit_record(id):
+def edit_record(student_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT id, student_id, name, blood_type, emergency_contact, medical_conditions FROM student_health WHERE id = %s', (id,))
+    # Changed to use student_id instead of id, since id column doesn't exist
+    cursor.execute('SELECT student_id, name, blood_type, emergency_contact, medical_conditions FROM student_health WHERE student_id = %s', (student_id,))
     record = cursor.fetchone()
     if not record:
         conn.close()
         flash('Record not found')
         return redirect(url_for('dashboard' if current_user.role == 'admin' else 'profile'))
-    if current_user.role == 'student' and record[1] != current_user.student_id:
+    if current_user.role == 'student' and record[0] != current_user.student_id:
         conn.close()
         flash('You can only edit your own record')
         return redirect(url_for('profile'))
@@ -287,25 +291,27 @@ def edit_record(id):
         emergency_contact = request.form['emergency_contact']
         medical_conditions = request.form.get('medical_conditions', '')
         try:
-            cursor.execute('UPDATE student_health SET student_id = %s, name = %s, blood_type = %s, emergency_contact = %s, medical_conditions = %s WHERE id = %s',
-                           (student_id, name, blood_type, emergency_contact, medical_conditions, id))
+            # Changed to use student_id instead of id
+            cursor.execute('UPDATE student_health SET student_id = %s, name = %s, blood_type = %s, emergency_contact = %s, medical_conditions = %s WHERE student_id = %s',
+                           (student_id, name, blood_type, emergency_contact, medical_conditions, student_id))
             conn.commit()
             flash('Record updated successfully!')
         except mysql.connector.Error as err:
             conn.close()
             flash(f"Error: {err}")
-            return redirect(url_for('edit_record', id=id))
+            return redirect(url_for('edit_record', student_id=student_id))
         conn.close()
         return redirect(url_for('dashboard' if current_user.role == 'admin' else 'profile'))
     conn.close()
     return render_template('edit.html', record=record)
 
-@app.route('/delete/<int:id>', methods=['POST'])
+@app.route('/delete/<student_id>', methods=['POST'])
 @login_required
-def delete_record(id):
+def delete_record(student_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT student_id FROM student_health WHERE id = %s', (id,))
+    # Changed to use student_id instead of id
+    cursor.execute('SELECT student_id FROM student_health WHERE student_id = %s', (student_id,))
     record = cursor.fetchone()
     if not record:
         conn.close()
@@ -314,7 +320,8 @@ def delete_record(id):
         conn.close()
         return jsonify({'success': False, 'message': 'You can only delete your own record'}), 403
     try:
-        cursor.execute('DELETE FROM student_health WHERE id = %s', (id,))
+        # Changed to use student_id instead of id
+        cursor.execute('DELETE FROM student_health WHERE student_id = %s', (student_id,))
         conn.commit()
         return jsonify({'success': True, 'message': 'Record deleted successfully!'})
     except mysql.connector.Error as err:

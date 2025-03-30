@@ -72,14 +72,14 @@
                     </tr>
                     {% for record in records %}
                     <tr>
+                        <td>{{ record[0] }}</td>
                         <td>{{ record[1] }}</td>
-                        <td>{{ record[2] }}</td>
+                        <td>{{ record[5] or 'Not set' }}</td>
                         <td>{{ record[6] or 'Not set' }}</td>
                         <td>{{ record[7] or 'Not set' }}</td>
-                        <td>{{ record[8] or 'Not set' }}</td>
+                        <td>{{ record[2] }}</td>
                         <td>{{ record[3] }}</td>
-                        <td>{{ record[4] }}</td>
-                        <td>{{ record[5] or 'None' }}</td>
+                        <td>{{ record[4] or 'None' }}</td>
                         <td>
                             <button onclick="window.location.href='/edit/{{ record[0] }}'">Edit</button>
                             <button onclick="if(confirm('Are you sure?')) window.location.href='/delete/{{ record[0] }}'">Delete</button>
@@ -122,7 +122,7 @@
             .catch(error => {
                 console.error('Error:', error);
                 const flashMessages = document.getElementById('flash-messages');
-                flashMessages.innerHTML = `<div class="flash">Error processing request. Please try again.</div>`;
+                // flashMessages.innerHTML = `<div class="flash">Error processing request. Please try again.</div>`;
             });
         }
     </script>

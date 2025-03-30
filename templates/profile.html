@@ -28,15 +28,15 @@
             <div id="record-content">
                 {% if record %}
                     <div class="profile-info">
-                        <h3>{{ record[2] }} ({{ record[1] }})</h3>
+                        <h3>{{ record[0] }} ({{ record[1] }})</h3>
                         <p><strong>Username:</strong> {{ user.username }}</p>
-                        <p><strong>Student ID:</strong> {{ record[1] }}</p>
-                        <p><strong>Address:</strong> {{ record[6] or 'Not set' }}</p>
-                        <p><strong>Guardian Name:</strong> {{ record[7] or 'Not set' }}</p>
-                        <p><strong>Guardian Contact:</strong> {{ record[8] or 'Not set' }}</p>
-                        <p><strong>Blood Type:</strong> {{ record[3] }}</p>
-                        <p><strong>Emergency Contact:</strong> {{ record[4] }}</p>
-                        <p><strong>Medical Conditions:</strong> {{ record[5] or 'None' }}</p>
+                        <p><strong>Student ID:</strong> {{ record[0] }}</p>
+                        <p><strong>Address:</strong> {{ record[5] or 'Not set' }}</p>
+                        <p><strong>Guardian Name:</strong> {{ record[6] or 'Not set' }}</p>
+                        <p><strong>Guardian Contact:</strong> {{ record[7] or 'Not set' }}</p>
+                        <p><strong>Blood Type:</strong> {{ record[2] }}</p>
+                        <p><strong>Emergency Contact:</strong> {{ record[3] }}</p>
+                        <p><strong>Medical Conditions:</strong> {{ record[4] or 'None' }}</p>
                         <div class="profile-actions">
                             <button onclick="window.location.href='/manage_profile'">Edit Profile</button>
                             <button onclick="deleteRecord('{{ record[0] }}')">Delete Health Record</button>
