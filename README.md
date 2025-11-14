@@ -1,4 +1,4 @@
-# Vital Health Details Manager (I have no clue what's in this repo and don't have enough energy to change anything here. This repo is public cause it's a cllg project.
+# Vital Health Details Manager (I have no clue what's in this repo and don't have enough energy to change anything here. This repo is public cause it's a cllg project.)
 
 A Flask-based web application for managing student health records at ERC.
 
